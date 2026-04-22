@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WisdomGuide — Your Council of Minds</title>
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&amp;family=Syne:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@300;400&amp;display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- App styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════ -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-gem">⬡</div>
+      <div>
+        <div class="logo-name">Wisdom<em>Guide</em></div>
+        <div class="header-sub">Your Council of Minds</div>
+      </div>
+    </div>
+    <button class="btn-new" id="btnNew" type="button">＋ New Problem</button>
+  </header>
+
+  <!-- ══════════════════════════════════════════
+       MAIN LAYOUT  (sidebar + main panel)
+  ══════════════════════════════════════════ -->
+  <div class="layout">
+
+    <!-- Sidebar: problem list -->
+    <aside class="sidebar">
+      <div class="sb-head">Problems</div>
+      <div id="probList">
+        <div class="sb-empty">No problems yet.<br>Click <strong>+ New Problem</strong> to begin.</div>
+      </div>
+    </aside>
+
+    <!-- Main panel: welcome screen + detail view -->
+    <main class="main" id="mainArea">
+
+      <!-- Welcome screen (shown when nothing is selected) -->
+      <div class="welcome" id="welcomeView">
+        <div class="welcome-glyph">✦</div>
+        <h2>Assemble your<br><em>Council of Minds</em></h2>
+        <p>
+          Bring your problem. Add any sources — the Quran, Elon Musk, Marcus Aurelius,
+          your mentor. Your council speaks in their voices, then synthesizes the ultimate guidance.
+        </p>
+        <div class="welcome-cards">
+          <div class="wc"><div class="wc-n">01</div><div class="wc-t">Define your problem clearly</div></div>
+          <div class="wc"><div class="wc-n">02</div><div class="wc-t">Add sources &amp; personalities</div></div>
+          <div class="wc"><div class="wc-n">03</div><div class="wc-t">Build a composite council</div></div>
+          <div class="wc"><div class="wc-n">04</div><div class="wc-t">Get unified wisdom &amp; a plan</div></div>
+        </div>
+      </div>
+
+      <!-- Detail view (injected by renderDetail()) -->
+      <div id="detailView" style="display:none;"></div>
+
+    </main>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MODAL: Add / Define Problem
+  ══════════════════════════════════════════ -->
+  <div class="overlay" id="probModal">
+    <div class="mbox">
+      <h2>Define Your <em>Problem</em></h2>
+
+      <div class="frow">
+        <div class="fg">
+          <label class="fl" for="pm-type">Type</label>
+          <select class="fs" id="pm-type">
+            <option value="life">Life / Personal</option>
+            <option value="business">Business / Career</option>
+            <option value="relationship">Relationship</option>
+            <option value="professional">Professional</option>
+            <option value="other">Other / Custom</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="fl" for="pm-urgency">Urgency</label>
+          <select class="fs" id="pm-urgency">
+            <option value="reflection">Needs Reflection</option>
+            <option value="soon">Need Help Soon</option>
+            <option value="urgent">Urgent</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="fl" for="pm-title">Problem Title</label>
+        <input class="fi" id="pm-title" placeholder="e.g. How do I become the greatest at what I do?" />
+      </div>
+
+      <div class="fg">
+        <label class="fl" for="pm-desc">Describe it (be honest)</label>
+        <textarea class="fta" id="pm-desc"
+          placeholder="What's really going on? What have you tried? What's holding you back?"></textarea>
+      </div>
+
+      <div class="macts">
+        <button class="btn-can" id="pm-x" type="button">Cancel</button>
+        <button class="btn-ok" id="pm-ok" type="button">Add Problem →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MODAL: Add Source
+  ══════════════════════════════════════════ -->
+  <div class="overlay" id="srcModal">
+    <div class="mbox">
+      <h2>Add a <em>Source</em></h2>
+
+      <div class="fg">
+        <label class="fl" for="sm-name">Name</label>
+        <input class="fi" id="sm-name"
+          placeholder="e.g. The Quran, Elon Musk, Marcus Aurelius, Atomic Habits…" />
+      </div>
+
+      <div class="frow">
+        <div class="fg">
+          <label class="fl" for="sm-type">Type</label>
+          <select class="fs" id="sm-type">
+            <option value="holy">Holy Scripture</option>
+            <option value="person">Person / Personality</option>
+            <option value="book">Book / Text</option>
+            <option value="philosophy">Philosophy / Teaching</option>
+            <option value="mentor">Mentor / Teacher</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="fl" for="sm-icon">Icon (emoji)</label>
+          <input class="fi" id="sm-icon" placeholder="📖 🧠 👤 🔥" maxlength="2" />
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="fl" for="sm-ctx">Extra Context (optional)</label>
+        <textarea class="fta" id="sm-ctx"
+          placeholder="e.g. Focus on Elon's work ethic and first-principles thinking. Or: Surah Al-Baqarah perspective."></textarea>
+      </div>
+
+      <div class="macts">
+        <button class="btn-can" id="sm-x" type="button">Cancel</button>
+        <button class="btn-ok" id="sm-ok" type="button">Add Source →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       MODAL: Build Composite Council
+  ══════════════════════════════════════════ -->
+  <div class="overlay" id="councilModal">
+    <div class="mbox wide">
+      <h2>Build Your <em>Council</em></h2>
+      <p style="font-size:0.85rem;color:var(--text2);line-height:1.65;">
+        Select the sources to combine into one unified advisor.
+        The Council speaks in all their voices, then delivers a synthesized verdict.
+      </p>
+
+      <div class="fg">
+        <div class="fl">Select Sources to Include</div>
+        <div class="council-src-list" id="councilSrcList"></div>
+      </div>
+
+      <div class="fg">
+        <label class="fl" for="cm-name">Council Name (optional)</label>
+        <input class="fi" id="cm-name" placeholder="e.g. The Greatest Council, My Spiritual Board…" />
+      </div>
+
+      <div class="fg">
+        <label class="fl" for="cm-icon">Council Icon</label>
+        <input class="fi" id="cm-icon" placeholder="⚡ 🌟 ✦ 🔮" maxlength="2" />
+      </div>
+
+      <div class="macts">
+        <button class="btn-can" id="cm-x" type="button">Cancel</button>
+        <button class="btn-ok" id="cm-ok" type="button">Create Council →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       SCRIPTS  (order matters)
+       1. api.js   — Anthropic API calls
+       2. app.js   — state, rendering, event handlers
+  ══════════════════════════════════════════ -->
+  <script src="api.js"></script>
+  <script src="app.js"></script>
+
+  <script>
+    // Boot the app once the DOM + scripts are ready
+    document.addEventListener('DOMContentLoaded', () => {
+      initModalEvents();   // wire up all modal buttons (defined in app.js)
+      renderSidebar();     // paint the problem list
+    });
+  </script>
+
+</body>
+</html>
